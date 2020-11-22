@@ -1,0 +1,131 @@
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+{% extends "sem/base.html" %}
+{% block content %}
+<style>
+input[type=submit] {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 22px 12px;
+      text-decoration: none;
+      margin: 6px 2px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-left:20px;
+    }
+p {
+  display: block;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 0;
+  margin-right: 0;
+  font-size: 22px;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  border: none;
+  background-color: #4CAF50;
+  padding: 14px 28px;
+  font-size: 26px;
+  cursor: pointer;
+  text-align: center;
+}
+</style>
+{% if  status  %}
+    {%  if uploaded_file_url %}
+            <article class="start">
+              <div class="media-body">
+                  <center>
+
+                <b><p class="article-content"> This is your last uploaded image. Please click calibrate once you are ready</p></b>
+
+                      </center>
+              </div>
+            </article>
+
+
+<article class="start">
+<div class="media-body">
+                    <div  style="width: 1024px;  height: 943px;  border: 1px solid black;">
+                     <img src="{{ uploaded_file_url }}"  width="1024" height="943" />
+                        </div>
+            </div>
+</article>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<div>
+    <center>
+        <article class="start">
+            <center>
+            <a class="btn btn-primary" href="/calibrate">Calibrate</a>
+            </center>
+        </article>
+        </center>
+</div>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p> Or select a new image</p>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="myfile">
+    <button type="submit">Upload</button>
+  </form>
+{% endif %}
+
+{% else %}
+    {%  if uploaded_file_url %}
+            <article class="start">
+              <div class="media-body">
+                  <center>
+
+                <b><p class="article-content"> This is your last uploaded image. </p></b>
+
+                      </center>
+              </div>
+            </article>
+            <article class="start">
+            <div class="media-body">
+                    <div  style="width: 1024px;  height: 943px;  border: 1px solid black;">
+                     <img src="{{ uploaded_file_url }}"  width="1024" height="943" />
+                        </div>
+            </div>
+</article>
+            <article class="start">
+              <div class="media-body">
+                  <center>
+
+                <b><p class="article-content">You will be notified once the software is ready for use</p></b>
+
+                      </center>
+              </div>
+            </article>
+
+<p> Or select a new image</p>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="myfile">
+    <button type="submit">Upload</button>
+  </form>
+                {% else %}
+            <article class="start">
+              <div class="media-body">
+                  <center>
+
+                <b><p class="article-content">This seems to be your first time here. Please upload a SEM image and wait for us to make some calibrations </p></b>
+
+
+                      </center>
+              </div>
+            </article>
+
+                      <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="myfile">
+    <button type="submit">Upload</button>
+  </form>
+
+{% endif %}
+
+{% endif %}
+
+{% endblock content %}

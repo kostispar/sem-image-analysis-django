@@ -1,0 +1,262 @@
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+{% extends "sem/base.html" %}
+{% block content %}
+<style>
+input[type=submit] {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 22px 12px;
+      text-decoration: none;
+      margin: 6px 2px;
+      cursor: pointer;
+      font-size: 14px;
+      font-size: 14px;
+      margin-left:20px;
+    }
+.btn {
+  display: block;
+  width: 100%;
+  border: none;
+  background-color: #4CAF50;
+  padding: 14px 28px;
+  font-size: 26px;
+  cursor: pointer;
+  text-align: center;
+}
+</style>
+    {%  if avg %}
+<b><p style="font-size: 22px;"> The average diameter is  {{ avg }} {{ unit }}</p></b>
+
+          {% endif %}
+
+          {%  if uploaded_file_url_1 %}
+<table>
+    <tr>
+           <td>
+
+                    <div  style="width: 768px;  height: 707px; ">
+                        <center><p>Original Image </p></center>
+                     <img src="{{ uploaded_file_url }}"  width="768" height="707" />
+                        </div>
+   </td>
+   <td>
+                    <div  style="width: 768px;  height: 707px; ">
+                        <center><p>Detections on X axis </p></center>
+                     <img src="{{ uploaded_file_url_1 }}"  width="768" height="707" />
+                        </div>
+   </td>
+    </tr>
+    <tr><td><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p></td>   </tr>
+    <tr>
+        <td>
+               <div  style="width: 912px;  height: 671px; ">
+                   <center><p> Statistical Reporting</p></center>
+                     <img src="{{ uploaded_file_url_2 }}"  width="912" height="671" />
+                        </div>
+        </td>
+</tr>
+</table>
+{% else %}
+                    <div  style="width: 1024px;  height: 943px;  border: 1px solid black;">
+                     <img src="{{ uploaded_file_url }}"  width="1024" height="943" />
+                        </div>
+
+          {% endif %}
+
+
+
+    {% if not avg %}
+
+{% if step_1 == 'no' and step_2 == 'no' %}
+
+<div>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p style="font-size: 18px;"><b>Step 1: </b> Click twice on the picture to select the start and end point of the scale bar</p>
+
+<b><p style="color:green;" id="demo0"></p></b>
+    <p id="demo1"></p>
+<p id="demo2"></p>
+        <article class="">
+            <a class="btn btn-primary" href="/calibrate">Continue</a>
+        </article>
+</div>
+{% endif %}
+{% if step_1 == 'yes' and step_2 == 'no' %}
+
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p style="font-size: 18px;"><b>Step 2: </b> Click twice on the picture to highlight the minimum diameter you wish</p>
+<b><p style="color:green;" id="demo13"></p></b>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+        <article class="">
+            <a class="btn btn-primary" href="/calibrate">Continue</a>
+        </article>
+{% endif %}
+{% if step_2 == 'yes' and step_3 == 'no' %}
+{% csrf_token %}
+
+
+    <table>
+        <tr>
+            <td>
+
+            <p style="font-size: 18px;"><b>Step 3:</b> Enter the real scale (number) of the
+                bar above</p>
+                <input type="text" id="myText" value="...">
+
+            <p id="demo3"></p>
+                <b><p style="color:green;" id="demo5"></p></b>
+            </td>
+        </tr>
+    </table>
+
+
+<table>
+        <tr>
+            <td>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                          <p style="font-size: 18px;"><b>Step 4:</b> Enter the unit of measurement</p>
+             <input type="text" id="myText2" value="...">
+
+
+            <p id="demo4"></p>
+                <b><p style="color:green;" id="demo6"></p></b>
+            </td>
+        </tr>
+    </table>
+<button onclick="myFunction()">Enter values</button>
+        <article class="">
+            <a class="btn btn-primary" href="/calibrate">Continue</a>
+        </article>
+
+     <b><p style="color:green;" id="demo7"></p></b>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+
+</div>
+{% endif %}
+{% if step_3 == 'yes' %}
+     <b><p style="color:green;" id="demo7"></p></b>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+        <article class="">
+            <a class="btn btn-primary" href="/calculate">Calculate</a>
+        </article>
+{% endif %}
+
+{% endif %}
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<script>
+
+var times = 0;
+var text = [];
+
+function printMousePos(event) {
+    if ( times == 0 ){
+
+    //document.getElementById("demo1").innerHTML  =
+    //"start coordinates: (" + event.clientX +
+    //", " + event.clientY + ")";
+    document.getElementById("demo0").innerHTML  = "Successfully selected start coordinates. Now select the end coordinates";
+    text.push(event.clientX)
+    text.push(event.clientY)
+    console.log(text)
+    }
+    if ( times == 1 ){
+    //document.getElementById("demo2").innerHTML  =
+    //"end coordinates: (" + event.clientX +
+    //", " + event.clientY + ")";
+    document.getElementById("demo0").innerHTML  = "Successfully highlighted the scale bar. Step 1 completed";
+    text.push(event.clientX)
+    text.push(event.clientY)
+    console.log(text)
+    $.post("/calibrate/",
+    {
+      start_x: text[0],
+      start_y: text[1],
+      end_x: text[2],
+      end_y: text[3]
+    },
+    function(data,status){
+    });
+
+    }
+    times++
+}
+
+document.addEventListener("click", printMousePos);
+
+
+var times1 = 0;
+var text1 = [];
+
+function printMousePos1(event) {
+    if ( times1 == 0 ){
+
+
+    document.getElementById("demo13").innerHTML  = "Successfully selected start coordinates minimum diameter. Now select the end coordinates";
+    text1.push(event.clientX)
+    text1.push(event.clientY)
+    console.log(text)
+    }
+    if ( times1 == 1 ){
+
+    document.getElementById("demo13").innerHTML  = "Successfully highlighted the minimum diameter. Step 2 completed";
+    text1.push(event.clientX)
+    text1.push(event.clientY)
+    console.log(text1)
+    $.post("/calibrate/",
+    {
+      start_x_d: text1[0],
+      start_y_d: text1[1],
+      end_x_d: text1[2],
+      end_y_d: text1[3]
+    },
+    function(data,status){
+    });
+
+    }
+    times1++
+}
+
+document.addEventListener("click", printMousePos1);
+
+
+function myFunction() {
+  var x = document.getElementById("myText").value;
+  var y = document.getElementById("myText2").value;
+  document.getElementById("demo3").innerHTML = "Successfully entered scale: " + x ;
+  document.getElementById("demo5").innerHTML = "Step 3 completed" ;
+  document.getElementById("demo4").innerHTML = "Successfully entered unit: " + y ;
+  document.getElementById("demo6").innerHTML = "Step 4 completed" ;
+  document.getElementById("demo7").innerHTML = "Please click the continue button" ;
+  $.post("/calibrate/",
+    {
+      scale: x,
+      unit: y
+    },
+    function(data,status){
+    });
+}
+
+function myFunction2() {
+  var x = document.getElementById("myText2").value;
+
+  $.post("/calibrate/",
+    {
+      unit: x
+    },
+    function(data,status){
+    });
+}
+</script>
+
+</body>
+</html>
+{% endblock content %}

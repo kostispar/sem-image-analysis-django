@@ -1,0 +1,49 @@
+{% extends "sem/base.html" %}
+{% block content %}
+<style>
+section {
+  margin: 78px 1.5% 60px 15.5%;
+  font-size: 20px;
+}
+p {
+  display: block;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 0;
+  margin-right: 0;
+  font-size: 18px;
+}
+.btn {
+  display: block;
+  width: 100%;
+  border: none;
+  background-color: #4CAF50;
+  padding: 14px 28px;
+  font-size: 26px;
+  cursor: pointer;
+  text-align: center;
+}
+</style>
+        {% for post in posts %}
+            <article class="start">
+              <div class="media-body">
+
+                <b><p style="text-align:center" > {{ post.text }}</p></b>
+               <b><p style="text-align:center" >  Please click the start button to begin.</p></b>
+              </div>
+            </article>
+        {% endfor %}
+    <center>
+        <article class="start">
+            <a class="btn btn-primary" href="/estimation">Start</a>
+        </article>
+    </center>
+    <p>
+
+
+    </p>
+<center>
+                     <img src="/static/sem/images/ires.png"  width="700" height="267" />
+
+    </center>
+{% endblock content %}
